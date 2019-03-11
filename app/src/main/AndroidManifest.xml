@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sourcey.KauLempung">
+
+    <application
+        android:allowBackup="true"
+        android:hardwareAccelerated="false"
+        android:icon="@drawable/logosplash"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".User.MainActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.Dark"></activity>
+        <activity
+            android:name=".SignupActivity"
+            android:theme="@style/AppTheme.Dark" />
+        <activity
+            android:name=".Admin.KatalogProduk"
+            android:label="Katalog Produk"
+            android:parentActivityName=".Admin.HomeAdmin" />
+        <activity
+            android:name=".Admin.HomeAdmin"
+            android:label="Home Admin" />
+        <activity
+            android:name=".Admin.TambahKatalog"
+            android:label="Tambah Produk"
+            android:parentActivityName=".Admin.KatalogProduk" />
+        <activity
+            android:name=".Admin.EditKatalog"
+            android:label="Edit Produk"
+            android:parentActivityName=".Admin.KatalogProduk" />
+        <activity
+            android:name=".Admin.DetailProduk"
+            android:label="Detail Produk"
+            android:parentActivityName=".Admin.KatalogProduk" />
+        <activity
+            android:name=".Admin.DaftarUser"
+            android:label="Daftar User"
+            android:parentActivityName=".Admin.HomeAdmin" />
+        <activity
+            android:name=".Admin.DetailUser"
+            android:label="Detail User"
+            android:parentActivityName=".Admin.DaftarUser" />
+        <activity
+            android:name=".Admin.ListPesanan"
+            android:label="List Pemesanan"
+            android:parentActivityName=".Admin.HomeAdmin" />
+        <activity
+            android:name=".User.ProfilUser"
+            android:label="Profil User"
+            android:parentActivityName=".User.DaftarKatalog" />
+        <activity
+            android:name=".User.EditProfile"
+            android:label="Edit Profil"
+            android:parentActivityName=".User.ProfilUser" />
+        <activity android:name=".User.DaftarKatalog" />
+        <activity
+            android:name=".User.DetailProdukUser"
+            android:label="Detail Produk"
+            android:parentActivityName=".User.DaftarKatalog" />
+        <activity
+            android:name=".User.Keranjang"
+            android:label="Keranjang"
+            android:parentActivityName=".User.DaftarKatalog" />
+        <activity
+            android:name=".User.Keranjang1"
+            android:label="Keranjang"
+            android:parentActivityName=".User.DaftarKatalog" />
+        <activity
+            android:name=".User.Checkout"
+            android:label="Checkout"
+            android:parentActivityName=".User.DaftarKatalog" />
+        <activity
+            android:name=".User.KonfirmasiPembayaran"
+            android:label="Konfirmasi Pembayaran"
+            android:parentActivityName=".User.DaftarKatalog" />
+        <activity android:name=".SplashScreen"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Admin.KonfirmasiPembayaranAdmin"
+            android:label="Konfirmasi Pembayaran Admin"
+            android:parentActivityName=".Admin.ListPesanan"
+            ></activity>
+    </application>
+
+</manifest>
