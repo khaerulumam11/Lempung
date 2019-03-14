@@ -82,7 +82,7 @@ public class KonfirmasiPembayaran extends AppCompatActivity {
         nn = getIntent().getStringExtra("id");
         if (kk.equals("Sudah Upload & Menunggu Konfirmasi Admin")) {
             setContentView(R.layout.menunggu_konfirmasi);
-        } else if (kk.equals("Sudah Dikonfirmasi")){
+        } else if (kk.equals("Approved") || kk.equals("Decline")){
             setContentView(R.layout.sudah_dikonfirmasi);
         }
         else if (kk.equals("Belum Upload Bukti")) {

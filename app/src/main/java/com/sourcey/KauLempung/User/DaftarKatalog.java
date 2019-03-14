@@ -103,7 +103,7 @@ public class DaftarKatalog extends AppCompatActivity {
 
             editText = findViewById(R.id.searchproduk);
 
-//            showData();
+            showData();
 
             editText.addTextChangedListener(new TextWatcher() {
                 @Override

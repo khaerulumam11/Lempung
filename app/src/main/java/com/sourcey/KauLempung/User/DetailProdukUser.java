@@ -243,25 +243,31 @@ public class DetailProdukUser extends AppCompatActivity {
     }
 
     public void submit(View view) {
-        pd.setMessage("Memberikan komentar... ");
-        pd.show();
+
+        String komentar = sourcekomentar.getText().toString();
 
         //Inisialisasi objek
         Comment com = new Comment(usernya, sourcekomentar.getText().toString(), idfoto);
 
         //Input data ke Firebase
-        dref.push().setValue(com).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(DetailProdukUser.this, "Komentar berhasil ditambahkan", Toast.LENGTH_SHORT).show();
-                    sourcekomentar.setText(null);
-                } else {
-                    Toast.makeText(DetailProdukUser.this, "Gagal memberikan komentar", Toast.LENGTH_SHORT).show();
+        if (komentar.isEmpty()){
+            Toast.makeText(this, "Isi Komentar Tidak Boleh Kosong", Toast.LENGTH_SHORT).show();
+        } else {
+            pd.setMessage("Memberikan komentar... ");
+            pd.show();
+            dref.push().setValue(com).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(DetailProdukUser.this, "Komentar berhasil ditambahkan", Toast.LENGTH_SHORT).show();
+                        sourcekomentar.setText(null);
+                    } else {
+                        Toast.makeText(DetailProdukUser.this, "Gagal memberikan komentar", Toast.LENGTH_SHORT).show();
+                    }
+                    pd.dismiss();
                 }
-                pd.dismiss();
-            }
-        });
+            });
+        }
 
     }
 }
