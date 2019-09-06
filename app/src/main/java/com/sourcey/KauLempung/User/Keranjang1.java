@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,9 +45,11 @@ public class Keranjang1 extends AppCompatActivity {
 
     ArrayList<Pesanan> list;
 
-    KeranjangAdapter1 katalogAdapter;
+    KeranjangAdapter katalogAdapter;
 
     String idUser;
+
+    LinearLayout linearLayout;
 
 
     @Override
@@ -63,9 +67,11 @@ public class Keranjang1 extends AppCompatActivity {
             ref = FirebaseDatabase.getInstance().getReference().child("LempungProduk").child("Pemesanan");
 
             list = new ArrayList<>();
-            katalogAdapter = new KeranjangAdapter1(this,list);
+            katalogAdapter = new KeranjangAdapter(this,list);
 
             recyclerView = findViewById(R.id.rv_keranjang);
+            linearLayout = findViewById(R.id.ln_bottom);
+            linearLayout.setVisibility(View.GONE);
 
             recyclerView.setHasFixedSize(true);
 
@@ -81,7 +87,7 @@ public class Keranjang1 extends AppCompatActivity {
                     list.clear();
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         Pesanan cur = data.getValue(Pesanan.class);
-                        if (cur.getUser().equals(idUser) && !cur.getStatus().equals("Belum Pesan")) {
+                        if (cur.getUser().equals(idUser)) {
                             cur.key = data.getKey();
                             list.add(cur);
                             katalogAdapter.notifyDataSetChanged();

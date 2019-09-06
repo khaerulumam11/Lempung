@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +48,10 @@ public class DetailProdukUser extends AppCompatActivity {
 
     TextView q,w,e,r,t;
 
+    EditText editText;
+
+    Button tambah, kurang;
+
     ImageView y;
 
     String z,x,c,v,b,n,u,i;
@@ -55,6 +61,8 @@ public class DetailProdukUser extends AppCompatActivity {
     FirebaseAuth mAuth;
 
     String stringUri;
+
+    Toolbar toolbar;
 
 
     private Uri imageUri;
@@ -71,7 +79,7 @@ public class DetailProdukUser extends AppCompatActivity {
     String id;
 
     String idUser;
-
+    int jumlahpro;
     private String postKey = "";
 
     EditText sourcekomentar,jumlahpes,alamat;
@@ -80,6 +88,7 @@ public class DetailProdukUser extends AppCompatActivity {
     ArrayList<Comment> list;
     DatabaseReference dref,mDatabase;
     ProgressDialog pd;
+    int hasil=10;
     String usernya,usernya1, idfoto,namamakanan,harga,user1,images;
 
 
@@ -88,12 +97,50 @@ public class DetailProdukUser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_produk_user);
 
+        toolbar = findViewById(R.id.toolbar);
+
+        toolbar.setTitle("Beranda > Detail Produk" );
+
+        toolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_primary_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
          q = findViewById(R.id.judul_title);
          w = findViewById(R.id.harga);
          e = findViewById(R.id.namatoko);
          r = findViewById(R.id.tlpntoko);
          t = findViewById(R.id.almttoko);
          y = findViewById(R.id.gambar);
+         tambah = findViewById(R.id.plus);
+         kurang = findViewById(R.id.minus);
+         editText = findViewById(R.id.jumlah);
+         jumlahpro =10;
+         editText.setText(String.valueOf(jumlahpro));
+         kurang.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                    if (hasil<=10){
+                        Toast.makeText(DetailProdukUser.this, "Minimal Pemesanan", Toast.LENGTH_SHORT).show();
+                    } else {
+                       hasil--;
+                    }
+                    editText.setText(String.valueOf(hasil));
+
+             }
+         });
+         tambah.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                    hasil++;
+                     editText.setText(String.valueOf(hasil));
+
+
+             }
+         });
 
         id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         idCurrentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -116,7 +163,7 @@ public class DetailProdukUser extends AppCompatActivity {
         i = getIntent().getStringExtra("key");
 
         q.setText(z);
-        w.setText("Rp." + x);
+        w.setText(x);
         e.setText(c);
         r.setText(v);
         t.setText(b);
@@ -136,36 +183,36 @@ public class DetailProdukUser extends AppCompatActivity {
         rc.setLayoutManager(new LinearLayoutManager(this));
         rc.setAdapter(adapter);
 
-        dref.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Comment cur = dataSnapshot.getValue(Comment.class);
-                if (cur.getmFoto().equals(idfoto)) {
-                    list.add(cur);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        dref.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                Comment cur = dataSnapshot.getValue(Comment.class);
+//                if (cur.getmFoto().equals(idfoto)) {
+//                    list.add(cur);
+//                    adapter.notifyDataSetChanged();
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
 
     }
@@ -182,64 +229,40 @@ public class DetailProdukUser extends AppCompatActivity {
     public void beli(View view) {
 // cara pemanggilannya seperti ini
         final String tanggal_sekarang = getCurrentDate();
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(DetailProdukUser.this);
-        builder.setTitle("Data Pembelian");
-        builder.setMessage("Pembeli dapat memasukkan jumlah pembelian pada laman ini");
+        EditText jumlahpes = findViewById(R.id.jumlah);
+        final String jumlah = jumlahpes.getText().toString();
 
-        LayoutInflater inflater= getLayoutInflater();
-        View dialog = inflater.inflate(R.layout.isi_jumlah,null);
-        builder.setView(dialog);
+        int a = Integer.parseInt(jumlah) * Integer.parseInt(x);
 
-        final EditText jumlahpes = dialog.findViewById(R.id.jmlhpsnan);
+        final String total = String.valueOf(a);
 
-        builder.setPositiveButton("Pesan", new DialogInterface.OnClickListener() {
+        Pesanan user = new Pesanan(n, q.getText().toString(), jumlah, tanggal_sekarang, w.getText().toString(), total, i, u, usernya1, "Belum Pesan", "default");
+
+        mDatabase.push().setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                final String jumlah = jumlahpes.getText().toString();
-
-                int a = Integer.parseInt(jumlah) * Integer.parseInt(x);
-
-                final String total = String.valueOf(a);
-
-                Pesanan user = new Pesanan(n,q.getText().toString(),jumlah,tanggal_sekarang,w.getText().toString(),total,i,u,usernya1,"Belum Pesan","default");
-
-                mDatabase.push().setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(DetailProdukUser.this,"Pesanan Berhasil",Toast.LENGTH_LONG).show();
-                        Intent ii = new Intent(DetailProdukUser.this, Keranjang.class);
-                        ii.putExtra("user", usernya1);
-                        ii.putExtra("key", i );
-                        ii.putExtra("namaproduk", z);
-                        ii.putExtra("tanggalpesanan",tanggal_sekarang);
-                        ii.putExtra("jumlahpesanan", jumlah);
-                        ii.putExtra("hargaproduk", w.getText().toString());
-                        ii.putExtra("id", u);
-                        ii.putExtra("image", n);
-                        ii.putExtra("total", total);
-                        ii.putExtra("status", "Belum Memesan");
-                        startActivity(ii);
-                        finish();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(DetailProdukUser.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(DetailProdukUser.this, "Pesanan Berhasil", Toast.LENGTH_LONG).show();
+                Intent ii = new Intent(DetailProdukUser.this, Keranjang.class);
+                ii.putExtra("user", usernya1);
+                ii.putExtra("key", i);
+                ii.putExtra("namaproduk", z);
+                ii.putExtra("tanggalpesanan", tanggal_sekarang);
+                ii.putExtra("jumlahpesanan", jumlah);
+                ii.putExtra("hargaproduk", w.getText().toString());
+                ii.putExtra("id", u);
+                ii.putExtra("image", n);
+                ii.putExtra("total", total);
+                ii.putExtra("status", "Belum Memesan");
+                startActivity(ii);
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(DetailProdukUser.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-
-        AlertDialog asd = builder.create();
-        asd.show();
     }
 
     public void submit(View view) {

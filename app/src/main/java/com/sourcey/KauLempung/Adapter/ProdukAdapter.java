@@ -37,7 +37,7 @@ public class ProdukAdapter extends RecyclerView.Adapter<ProdukAdapter.ItemViewHo
 
         public TextView mDetail;
 
-        public ImageView mImagePost;
+        public ImageView mImagePost, cartImage;
 
         public CardView cardViewPost;
 
@@ -47,7 +47,7 @@ public class ProdukAdapter extends RecyclerView.Adapter<ProdukAdapter.ItemViewHo
             mTitlePost = itemView.findViewById(R.id.tv_title_post);
 
             mPost = itemView.findViewById(R.id.tv_post);
-            mDetail = itemView.findViewById(R.id.detail);
+            cartImage = itemView.findViewById(R.id.cart_button);
 
             mImagePost=itemView.findViewById(R.id.img_post);
 
@@ -80,12 +80,12 @@ public class ProdukAdapter extends RecyclerView.Adapter<ProdukAdapter.ItemViewHo
 //
 //        holder.mUsername.setText(user[0]);
         holder.mTitlePost.setText(currentItem.getTitle());
-        holder.mPost.setText("Rp. "+currentItem.getHarga());
+        holder.mPost.setText(addRp(currentItem.getHarga()));
         holder.mPost.setTag(currentItem.getImage());
 
         Glide.with(mContext).load(currentItem.getImage()).into(holder.mImagePost);
 
-        holder.mDetail.setOnClickListener(new View.OnClickListener() {
+        holder.cartImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent kk = new Intent(mContext, DetailProdukUser.class);
@@ -106,5 +106,16 @@ public class ProdukAdapter extends RecyclerView.Adapter<ProdukAdapter.ItemViewHo
     @Override
     public int getItemCount() {
         return mExampleList.size();
+    }
+
+    public static String addRp(String currency) {
+//        String[] toConvert = currency.split(".");
+        StringBuilder str = new StringBuilder(currency);
+        int i = str.length() - 3;
+        while (i > 0) {
+            str.insert(i, ".");
+            i -= 3;
+        }
+        return "Rp. " + str.toString();
     }
 }

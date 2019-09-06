@@ -1,11 +1,11 @@
 package com.sourcey.KauLempung.User;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,17 +28,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.sourcey.KauLempung.Adapter.KatalogAdapter;
+import com.smarteist.autoimageslider.IndicatorAnimations;
+import com.smarteist.autoimageslider.SliderAnimations;
+import com.smarteist.autoimageslider.SliderView;
 import com.sourcey.KauLempung.Adapter.ProdukAdapter;
 import com.sourcey.KauLempung.Adapter.ProdukViewHolder;
-import com.sourcey.KauLempung.Adapter.SearchAdapter;
 import com.sourcey.KauLempung.Adapter.SearchProdukAdapter;
-import com.sourcey.KauLempung.Admin.DaftarUser;
 import com.sourcey.KauLempung.LoginActivity;
-import com.sourcey.KauLempung.Model.Item2;
 import com.sourcey.KauLempung.Model.Produk;
 import com.sourcey.KauLempung.Model.Produk2;
-import com.sourcey.KauLempung.Model.UserSearch;
 import com.sourcey.KauLempung.R;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
@@ -62,6 +60,8 @@ public class DaftarKatalog extends AppCompatActivity {
     ArrayList<Produk> list;
 
     ProdukAdapter katalogAdapter;
+
+    SliderView sliderView;
 
     String idUser;
 
@@ -170,7 +170,7 @@ public class DaftarKatalog extends AppCompatActivity {
                 Glide.with(DaftarKatalog.this).load(model.getImage()).into(holder.dd);
 
 
-                holder.cc.setOnClickListener(new View.OnClickListener() {
+                holder.cardViewPost.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent kk = new Intent(DaftarKatalog.this, DetailProdukUser.class);

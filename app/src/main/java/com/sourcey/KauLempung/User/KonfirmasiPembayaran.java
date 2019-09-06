@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -65,6 +66,7 @@ public class KonfirmasiPembayaran extends AppCompatActivity {
     Button mChooseImage;
 
     ImageView hg;
+    Toolbar toolbar;
 
 
     @Override
@@ -88,14 +90,21 @@ public class KonfirmasiPembayaran extends AppCompatActivity {
         else if (kk.equals("Belum Upload Bukti")) {
             setContentView(R.layout.activity_konfirmasi_pembayaran);
 
+            toolbar = findViewById(R.id.toolbar);
+            toolbar.setTitle("Beli Produk > Keranjang > Checkout > Bayar");
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_primary_24dp);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
             id = FirebaseAuth.getInstance().getCurrentUser().getUid();
             idCurrentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
             dlg = new ProgressDialog(this);
 
-            mStorage = FirebaseStorage.getInstance().getReference();
+//            mStorage = FirebaseStorage.getInstance().getReference();
 
-
-            ii = findViewById(R.id.hrgtot);
             hg = findViewById(R.id.image_konfirm);
 
             ii.setText(String.valueOf(hh));
@@ -118,60 +127,62 @@ public class KonfirmasiPembayaran extends AppCompatActivity {
     private void simpanperubahan() {
         dlg.setMessage("Uploading!");
 
+        Intent pindah = new Intent(KonfirmasiPembayaran.this,DaftarKatalog.class);
+        startActivity(pindah);
         //Menentukan nama untuk file di Firebase
-        StorageReference filepath = mStorage.child("LempungProduk").child("Pemesanan").child(mm);
-
-        //Mendapatkan gambar dari Imageview untuk diupload
-        hg.setDrawingCacheEnabled(true);
-        hg.buildDrawingCache();
-        Bitmap bitmap = hg.getDrawingCache();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-        final UploadTask task = filepath.putBytes(data);
-
-        task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            //Method ketika upload gambar berhasil
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //Inisialisasi post untuk disimpan di FirebaseDatabase
-//                Task<Uri> aa = task.getSnapshot().getMetadata().getReference().getDownloadUrl();
-//                stringUri = aa.toString();
-                task.getSnapshot().getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        stringUri = uri.toString();
-                        Pesanan user = new Pesanan(jj,aa,ss,dd,gg,hh,mm,nn,ff,"Sudah Upload & Menunggu Konfirmasi Admin",stringUri);
-
-                        databaseFood = FirebaseDatabase.getInstance().getReference();
-
-                        databaseFood.child("LempungProduk").child("Pemesanan").child(mm).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(KonfirmasiPembayaran.this, "Upload berhasil", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(KonfirmasiPembayaran.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        //Tutup dialog ketika berhasil atau pun gagal
-                        dlg.dismiss();
-                    }
-
-                    //Ketika upload gambar gagal
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(KonfirmasiPembayaran.this, "Gagal Upload!", Toast.LENGTH_SHORT).show();
-                        dlg.dismiss();
-                    }
-                });
-            }
-        });
+//        StorageReference filepath = mStorage.child("LempungProduk").child("Pemesanan").child(mm);
+//
+//        //Mendapatkan gambar dari Imageview untuk diupload
+//        hg.setDrawingCacheEnabled(true);
+//        hg.buildDrawingCache();
+//        Bitmap bitmap = hg.getDrawingCache();
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//        byte[] data = baos.toByteArray();
+//        final UploadTask task = filepath.putBytes(data);
+//
+//        task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            //Method ketika upload gambar berhasil
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                //Inisialisasi post untuk disimpan di FirebaseDatabase
+////                Task<Uri> aa = task.getSnapshot().getMetadata().getReference().getDownloadUrl();
+////                stringUri = aa.toString();
+//                task.getSnapshot().getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                    @Override
+//                    public void onSuccess(Uri uri) {
+//                        stringUri = uri.toString();
+//                        Pesanan user = new Pesanan(jj,aa,ss,dd,gg,hh,mm,nn,ff,"Sudah Upload & Menunggu Konfirmasi Admin",stringUri);
+//
+//                        databaseFood = FirebaseDatabase.getInstance().getReference();
+//
+//                        databaseFood.child("LempungProduk").child("Pemesanan").child(mm).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                Toast.makeText(KonfirmasiPembayaran.this, "Upload berhasil", Toast.LENGTH_SHORT).show();
+//                                finish();
+//                            }
+//                        }).addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Toast.makeText(KonfirmasiPembayaran.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//
+//                        //Tutup dialog ketika berhasil atau pun gagal
+//                        dlg.dismiss();
+//                    }
+//
+//                    //Ketika upload gambar gagal
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(KonfirmasiPembayaran.this, "Gagal Upload!", Toast.LENGTH_SHORT).show();
+//                        dlg.dismiss();
+//                    }
+//                });
+//            }
+//        });
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.sourcey.KauLempung.Admin;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -76,9 +75,10 @@ public class KatalogProduk extends AppCompatActivity {
 
         setSwipeForRecyclerView();
 
+
         ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 list.clear();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     data.getKey(); // ini disimpan jg ke modelnya
@@ -92,7 +92,7 @@ public class KatalogProduk extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });

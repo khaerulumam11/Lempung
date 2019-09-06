@@ -40,7 +40,7 @@ import java.io.InputStream;
 
 public class EditProfile extends AppCompatActivity {
 
-    EditText mTitle, mEmail, mAlamat,mNoHp,mPassword;
+    EditText mTitle, mEmail, mAlamat,mNoHp,mPassword,mUlangi;
 
     ImageView imageView;
 
@@ -91,6 +91,7 @@ public class EditProfile extends AppCompatActivity {
         mAlamat = findViewById(R.id.v_alamat);
         mNoHp = findViewById(R.id.v_nohp);
         mPassword = findViewById(R.id.v_password);
+        mUlangi = findViewById(R.id.ulangiPassword);
 
         mChooseImage = findViewById(R.id.btn_choose_image);
         imageView = findViewById(R.id.img_post);
@@ -127,6 +128,7 @@ public class EditProfile extends AppCompatActivity {
                         mAlamat.setText(cur.getAlamat());
                         mNoHp.setText(cur.getNohp());
                         mPassword.setText(cur.getPassword());
+                        mUlangi.setText(cur.getPassword());
                         Glide.with(getApplication()).load(cur.getImage()).into(imageView);
                     }
                 }
@@ -147,62 +149,68 @@ public class EditProfile extends AppCompatActivity {
         final String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final String iduser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-        dlg.setMessage("Uploading!");
+        if (mUlangi.getText()!=mPassword.getText()){
+            mUlangi.setError("Password Tidak Sama");
+            mPassword.setError("Password Tidak Sama");
+        } else {
 
-        //Menentukan nama untuk file di Firebase
-        StorageReference filepath = mStorage.child("Lempung").child("user").child(mTitle.getText().toString());
+            dlg.setMessage("Uploading!");
 
-        //Mendapatkan gambar dari Imageview untuk diupload
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-        Bitmap bitmap = imageView.getDrawingCache();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-        final UploadTask task = filepath.putBytes(data);
+            //Menentukan nama untuk file di Firebase
+            StorageReference filepath = mStorage.child("Lempung").child("user").child(mTitle.getText().toString());
 
-        task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            //Method ketika upload gambar berhasil
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //Inisialisasi post untuk disimpan di FirebaseDatabase
+            //Mendapatkan gambar dari Imageview untuk diupload
+            imageView.setDrawingCacheEnabled(true);
+            imageView.buildDrawingCache();
+            Bitmap bitmap = imageView.getDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            final UploadTask task = filepath.putBytes(data);
+
+            task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                //Method ketika upload gambar berhasil
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    //Inisialisasi post untuk disimpan di FirebaseDatabase
 //                Task<Uri> aa = task.getSnapshot().getMetadata().getReference().getDownloadUrl();
 //                stringUri = aa.toString();
-                task.getSnapshot().getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        stringUri = uri.toString();
-                        UserProfile user = new UserProfile(mTitle.getText().toString(),mEmail.getText().toString(),stringUri,mAlamat.getText().toString(),mNoHp.getText().toString(),mPassword.getText().toString(),"user");
+                    task.getSnapshot().getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            stringUri = uri.toString();
+                            UserProfile user = new UserProfile(mTitle.getText().toString(), mEmail.getText().toString(), stringUri, mAlamat.getText().toString(), mNoHp.getText().toString(), mPassword.getText().toString(), "user");
 
-                        databaseFood = FirebaseDatabase.getInstance().getReference();
+                            databaseFood = FirebaseDatabase.getInstance().getReference();
 
-                        databaseFood.child("KauLempung").child("user").child(postKey).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(EditProfile.this, "Upload berhasil", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(EditProfile.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                            databaseFood.child("KauLempung").child("user").child(postKey).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(EditProfile.this, "Upload berhasil", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(EditProfile.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
-                        //Tutup dialog ketika berhasil atau pun gagal
-                        dlg.dismiss();
-                    }
+                            //Tutup dialog ketika berhasil atau pun gagal
+                            dlg.dismiss();
+                        }
 
-                    //Ketika upload gambar gagal
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(EditProfile.this, "Gagal Upload!", Toast.LENGTH_SHORT).show();
-                        dlg.dismiss();
-                    }
-                });
-            }
-        });
+                        //Ketika upload gambar gagal
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(EditProfile.this, "Gagal Upload!", Toast.LENGTH_SHORT).show();
+                            dlg.dismiss();
+                        }
+                    });
+                }
+            });
+        }
     }
 
     @Override

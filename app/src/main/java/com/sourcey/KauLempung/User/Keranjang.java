@@ -7,13 +7,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,13 +22,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.sourcey.KauLempung.Adapter.KatalogAdapter;
 import com.sourcey.KauLempung.Adapter.KeranjangAdapter;
-import com.sourcey.KauLempung.Adapter.ProdukAdapter;
-import com.sourcey.KauLempung.Admin.KatalogProduk;
 import com.sourcey.KauLempung.LoginActivity;
 import com.sourcey.KauLempung.Model.Pesanan;
-import com.sourcey.KauLempung.Model.Produk;
 import com.sourcey.KauLempung.R;
 import com.sourcey.KauLempung.utils.SwipeUtilDelete;
 
@@ -48,10 +44,15 @@ public class Keranjang extends AppCompatActivity {
 
     ArrayList<Pesanan> list;
 
+    Button checkout;
+
     KeranjangAdapter katalogAdapter;
 
     String idUser;
 
+    int total_harga=0, jumlahpesanan;
+
+    TextView harga;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,8 @@ public class Keranjang extends AppCompatActivity {
             katalogAdapter = new KeranjangAdapter(this,list);
 
             recyclerView = findViewById(R.id.rv_keranjang);
-
+            harga = findViewById(R.id.tv_total_pricecourse);
+            checkout = findViewById(R.id.btn_buynow);
             recyclerView.setHasFixedSize(true);
 
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -84,19 +86,36 @@ public class Keranjang extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     list.clear();
+                    int harga_course=0;
+                    int jmlhpesanan=0;
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         Pesanan cur = data.getValue(Pesanan.class);
                         if (cur.getUser().equals(idUser) && cur.getStatus().equals("Belum Pesan")) {
+                            harga_course =Integer.parseInt(cur.getTotal());
+                            jmlhpesanan = Integer.parseInt(cur.getJumlahpesanan());
+                            total_harga+=harga_course;
+                            jumlahpesanan+=jmlhpesanan;
                             cur.key = data.getKey();
                             list.add(cur);
                             katalogAdapter.notifyDataSetChanged();
                         }
                     }
+                    harga.setText(addRp(String.valueOf(total_harga)));
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                }
+            });
+
+            checkout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent pindah = new Intent(Keranjang.this,Checkout.class);
+                    pindah.putExtra("jumlahPesanan",String.valueOf(jumlahpesanan));
+                    pindah.putExtra("totalHarga", String.valueOf(total_harga));
+                    startActivity(pindah);
                 }
             });
 
@@ -167,5 +186,16 @@ public class Keranjang extends AppCompatActivity {
 
             }
         });
+    }
+
+    public static String addRp(String currency) {
+//        String[] toConvert = currency.split(".");
+        StringBuilder str = new StringBuilder(currency);
+        int i = str.length() - 3;
+        while (i > 0) {
+            str.insert(i, ".");
+            i -= 3;
+        }
+        return "Rp. " + str.toString();
     }
 }

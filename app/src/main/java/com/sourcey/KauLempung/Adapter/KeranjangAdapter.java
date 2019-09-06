@@ -35,7 +35,7 @@ public class KeranjangAdapter extends RecyclerView.Adapter<KeranjangAdapter.Item
 
         public TextView mJumlahPesanan;
         public TextView mTanggalPesan;
-//        public TextView mStatusPesanan;
+        public TextView mStatusPesanan;
         public ImageView mGambarProduk;
 
         public CardView cardViewPost;
@@ -47,10 +47,10 @@ public class KeranjangAdapter extends RecyclerView.Adapter<KeranjangAdapter.Item
 
             mJumlahPesanan = itemView.findViewById(R.id.tv_jmlhpesanan);
             mTanggalPesan = itemView.findViewById(R.id.tv_tglpesan);
-//            mStatusPesanan = itemView.findViewById(R.id.tv_statuspesan);
+            mStatusPesanan = itemView.findViewById(R.id.tv_status);
             mGambarProduk = itemView.findViewById(R.id.gambar_produk);
 
-            cardViewPost= itemView.findViewById(R.id.cardViewPost);
+//            cardViewPost= itemView.findViewById(R.id.cardViewPost);
 
         }
     }
@@ -79,30 +79,29 @@ public class KeranjangAdapter extends RecyclerView.Adapter<KeranjangAdapter.Item
 //
 //        holder.mUsername.setText(user[0]);
         holder.mJudulProduk.setText(currentItem.getNamaproduk());
-        holder.mJumlahPesanan.setText(currentItem.getJumlahpesanan());
-        holder.mTanggalPesan.setText(currentItem.getTglpesan());
-//        holder.mStatusPesanan.setText(currentItem.getStatus());
+        holder.mTanggalPesan.setText("Pemesanan "+currentItem.getTglpesan());
+        holder.mStatusPesanan.setText("Status : "+currentItem.getStatus());
         holder.mTanggalPesan.setTag(currentItem.getGambar());
 
         Glide.with(mContext).load(currentItem.getGambar()).into(holder.mGambarProduk);
 
-        holder.cardViewPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent kk = new Intent(mContext, Checkout.class);
-                kk.putExtra("user", currentItem.getUser());
-                kk.putExtra("key", currentItem.getKey() );
-                kk.putExtra("namaproduk", currentItem.getNamaproduk());
-                kk.putExtra("tanggalpesanan", currentItem.getTglpesan());
-                kk.putExtra("jumlahpesanan", currentItem.getJumlahpesanan());
-                kk.putExtra("hargaproduk", currentItem.getHargaproduk());
-                kk.putExtra("id", currentItem.getId());
-                kk.putExtra("image", currentItem.getGambar());
-                kk.putExtra("total", currentItem.getTotal());
-                kk.putExtra("status", currentItem.getStatus());
-                mContext.startActivity(kk);
-            }
-        });
+//        holder.cardViewPost.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent kk = new Intent(mContext, Checkout.class);
+//                kk.putExtra("user", currentItem.getUser());
+//                kk.putExtra("key", currentItem.getKey() );
+//                kk.putExtra("namaproduk", currentItem.getNamaproduk());
+//                kk.putExtra("tanggalpesanan", currentItem.getTglpesan());
+//                kk.putExtra("jumlahpesanan", currentItem.getJumlahpesanan());
+//                kk.putExtra("hargaproduk", currentItem.getHargaproduk());
+//                kk.putExtra("id", currentItem.getId());
+//                kk.putExtra("image", currentItem.getGambar());
+//                kk.putExtra("total", currentItem.getTotal());
+//                kk.putExtra("status", currentItem.getStatus());
+//                mContext.startActivity(kk);
+//            }
+//        });
 
     }
 

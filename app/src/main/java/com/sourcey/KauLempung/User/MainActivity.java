@@ -3,6 +3,11 @@ package com.sourcey.KauLempung.User;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +26,9 @@ import com.sourcey.KauLempung.LoginActivity;
 import com.sourcey.KauLempung.Model.Item;
 import com.sourcey.KauLempung.Model.Item2;
 import com.sourcey.KauLempung.R;
+import com.sourcey.KauLempung.User.fragment.CartFragment;
+import com.sourcey.KauLempung.User.fragment.HomeFragment;
+import com.sourcey.KauLempung.User.fragment.ProfileFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth.AuthStateListener listener;
     private FirebaseAuth mAuth;
 
+    private BottomNavigationView bottomNavigationView;
+    HomeFragment homeFragment;
+    ProfileFragment profileFragment;
+    CartFragment cartFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,50 +57,48 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else {
-            exampleItems = new ArrayList<>();
-            exampleItems.add(new Item2(R.drawable.dandang, "Katalog Produk",R.color.red));
-            exampleItems.add(new Item2(R.drawable.gerabah, "Lihat Pemesanan", R.color.orange));
-            exampleItems.add(new Item2(R.drawable.guci, "Profil", R.color.yellow));
+            homeFragment = new HomeFragment();
+            profileFragment = new ProfileFragment();
+            cartFragment = new CartFragment();
+            bottomNavigationView = findViewById(R.id.bottomnav_menu);
+            LoadHomeFragment();
+            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment fragment = null;
+                    switch (item.getItemId()) {
+                        case R.id.navigation_home_learning:
+                            onchangeSegmentFragment(homeFragment, "Home Fragment");
+                            return true;
+                        case R.id.navigation_cart:
+                            onchangeSegmentFragment(cartFragment, "Cart Fragment");
+                            return true;
+                        case R.id.navigation_profile:
+                            onchangeSegmentFragment(profileFragment, "Profile Fragment");
+                            return true;
+                    }
+                    return false;
+                }
+            });
 
-            buildRecyclerView();
         }
     }
 
-//
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    private void LoadHomeFragment() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        fragmentTransaction.replace(R.id.main_content, homeFragment, "Home Fragment");
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout) {
-            mAuth.signOut();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
+    private void onchangeSegmentFragment(Fragment fragment, String tag) {
+        FragmentManager fragmentManager2 = getSupportFragmentManager();
+        fragmentManager2.beginTransaction().
+                disallowAddToBackStack().
+                replace(R.id.main_content, fragment).
+                commit();
     }
 
-    private void buildRecyclerView() {
-
-        mRecyclerView = findViewById(R.id.rv);
-
-        mAdapter = new ItemUserListAdapter(this,exampleItems);
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mAdapter);
-
-    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {

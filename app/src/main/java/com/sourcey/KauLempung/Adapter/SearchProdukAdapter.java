@@ -34,9 +34,8 @@ public class SearchProdukAdapter extends RecyclerView.Adapter<SearchProdukAdapte
 
         public TextView mPost;
 
-        public TextView mDetail;
 
-        public ImageView mImagePost;
+        public ImageView mImagePost,mDetail;
 
         public CardView cardViewPost;
 
@@ -46,7 +45,7 @@ public class SearchProdukAdapter extends RecyclerView.Adapter<SearchProdukAdapte
             mTitlePost = itemView.findViewById(R.id.tv_title_post);
 
             mPost = itemView.findViewById(R.id.tv_post);
-            mDetail = itemView.findViewById(R.id.detail);
+            mDetail = itemView.findViewById(R.id.cart_button);
 
             mImagePost=itemView.findViewById(R.id.img_post);
 

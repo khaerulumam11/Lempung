@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:orientation="vertical"
-    android:background="@color/primary"
+    android:background="@color/white"
     tools:context="com.sourcey.KauLempung.User.EditProfile">
 
     <LinearLayout
@@ -14,21 +14,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-
-            android:id="@+id/img_post"
-
-            android:layout_centerHorizontal="true"
-
+        <LinearLayout
             android:layout_width="120dp"
-
             android:layout_height="120dp"
-
             android:layout_gravity="center"
-
-            android:src="@drawable/bag"/>
-
-
+            android:orientation="vertical">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_post"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_account_circle_black_24dp"/>
+        </LinearLayout>
         <Button
 
             android:id="@+id/btn_choose_image"
@@ -47,10 +43,10 @@
 
 
         <EditText
-            android:textColor="#ffff"
+            android:textColor="#000"
             android:layout_marginTop="20dp"
             android:id="@+id/tv_namapengguna"
-            android:hint="Nama Pengguna"
+            android:hint="Nama"
 
             android:layout_below="@id/img_post"
 
@@ -60,32 +56,8 @@
 
             android:inputType="text" />
 
-
-
         <EditText
-            android:textColor="#ffff"
-            android:id="@+id/v_email"
-            android:hint="Email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            />
-
-
-        <EditText
-            android:textColor="#ffff"
-            android:id="@+id/v_password"
-            android:hint="Password"
-
-            android:layout_width="match_parent"
-
-            android:layout_height="wrap_content"
-
-            />
-
-
-        <EditText
-            android:textColor="#ffff"
+            android:textColor="#000"
             android:id="@+id/v_alamat"
 
             android:hint="Alamat"
@@ -97,8 +69,18 @@
             />
 
 
+
         <EditText
-            android:textColor="#ffff"
+            android:textColor="#000"
+            android:id="@+id/v_email"
+            android:hint="Email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            />
+
+        <EditText
+            android:textColor="#000"
             android:id="@+id/v_nohp"
             android:hint="No Hp"
 
@@ -110,13 +92,42 @@
 
             />
 
+        <EditText
+            android:textColor="#000"
+            android:id="@+id/v_password"
+            android:hint="Password"
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+
+            />
+
+        <EditText
+            android:textColor="#000"
+            android:id="@+id/ulangiPassword"
+            android:hint="Ulangi Password"
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+
+            />
+
+
+
+
+
+
+
 
         <Button
             android:layout_marginTop="20dp"
             android:id="@+id/tambah"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Simpan"
+            android:text="Sunting Profil"
+            android:textColor="@color/primary"
             android:onClick="updateProfil"
             android:background="@drawable/button_layout"/>
     </LinearLayout>

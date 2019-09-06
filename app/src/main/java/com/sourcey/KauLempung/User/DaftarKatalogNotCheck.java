@@ -1,14 +1,10 @@
 package com.sourcey.KauLempung.User;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -32,24 +27,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.sourcey.KauLempung.Adapter.KatalogAdapter;
 import com.sourcey.KauLempung.Adapter.ProdukAdapter;
 import com.sourcey.KauLempung.Adapter.ProdukViewHolder;
-import com.sourcey.KauLempung.Adapter.SearchAdapter;
 import com.sourcey.KauLempung.Adapter.SearchProdukAdapter;
-import com.sourcey.KauLempung.Admin.DaftarUser;
 import com.sourcey.KauLempung.LoginActivity;
-import com.sourcey.KauLempung.Model.Item2;
 import com.sourcey.KauLempung.Model.Produk;
 import com.sourcey.KauLempung.Model.Produk2;
-import com.sourcey.KauLempung.Model.UserSearch;
 import com.sourcey.KauLempung.R;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
 
-public class DaftarKatalog extends AppCompatActivity {
+public class DaftarKatalogNotCheck extends AppCompatActivity {
 
     CarouselView carouselView;
     int[] sampleImages = { R.drawable.image_3, R.drawable.image_2, R.drawable.image_4, R.drawable.image_1, R.drawable.image_5};
@@ -81,78 +71,70 @@ public class DaftarKatalog extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daftar_katalog);
 
-        if (checkInternet()) {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            carouselView = findViewById(R.id.carouselView);
+            carouselView.setPageCount(sampleImages.length);
+            carouselView.setImageListener(imageListener);
+//            idUser = user.getEmail();
+            ref = FirebaseDatabase.getInstance().getReference().child("katalogproduk");
 
-            mAuth = FirebaseAuth.getInstance();
-            FirebaseUser user = mAuth.getCurrentUser();
-            if (user == null) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-            } else {
-                carouselView = findViewById(R.id.carouselView);
-                carouselView.setPageCount(sampleImages.length);
-                carouselView.setImageListener(imageListener);
-                idUser = user.getEmail();
-                ref = FirebaseDatabase.getInstance().getReference().child("katalogproduk");
+            list = new ArrayList<>();
+            produks = new ArrayList<>();
+            katalogAdapter = new ProdukAdapter(this,list);
 
-                list = new ArrayList<>();
-                produks = new ArrayList<>();
-                katalogAdapter = new ProdukAdapter(this, list);
+            recyclerView = findViewById(R.id.list_recycler);
 
-                recyclerView = findViewById(R.id.list_recycler);
+            recyclerView.setHasFixedSize(true);
 
-                recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
 
-                recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            recyclerView.setAdapter(katalogAdapter);
 
-                recyclerView.setAdapter(katalogAdapter);
+            editText = findViewById(R.id.searchproduk);
 
-                editText = findViewById(R.id.searchproduk);
+            showData();
 
-                showData();
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                    if (!s.toString().isEmpty()) {
+                        setAdapter(s.toString());
                     }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
 
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    list.clear();
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        Produk cur = data.getValue(Produk.class);
+                        cur.key = data.getKey();
+                        list.add(cur);
+                        katalogAdapter.notifyDataSetChanged();
                     }
+                }
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        if (!s.toString().isEmpty()) {
-                            setAdapter(s.toString());
-                        }
+                }
+            });
 
-                    }
-                });
-
-                ref.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        list.clear();
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            Produk cur = data.getValue(Produk.class);
-                            cur.key = data.getKey();
-                            list.add(cur);
-                            katalogAdapter.notifyDataSetChanged();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-            }
-        } else {
-            Toast.makeText(this, "Tidak Ada Internet", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -176,13 +158,13 @@ public class DaftarKatalog extends AppCompatActivity {
                 holder.bb.setText("Rp. " + model.getHarga());
                 holder.bb.setTag(model.getImage());
 
-                Glide.with(DaftarKatalog.this).load(model.getImage()).into(holder.dd);
+                Glide.with(DaftarKatalogNotCheck.this).load(model.getImage()).into(holder.dd);
 
 
                 holder.cc.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent kk = new Intent(DaftarKatalog.this, DetailProdukUser.class);
+                        Intent kk = new Intent(DaftarKatalogNotCheck.this, DetailProdukUser.class);
                         kk.putExtra("namatoko", model.getNamaprod());
                         kk.putExtra("key", model.getKey() );
                         kk.putExtra("judulproduk", model.getTitle());
@@ -218,7 +200,7 @@ public class DaftarKatalog extends AppCompatActivity {
                         produks.add(userSearch);
                     }
 
-                    SearchProdukAdapter searchAdapter = new SearchProdukAdapter(DaftarKatalog.this, produks);
+                    SearchProdukAdapter searchAdapter = new SearchProdukAdapter(DaftarKatalogNotCheck.this, produks);
                     recyclerView.setAdapter(searchAdapter);
                     searchAdapter.notifyDataSetChanged();
                 }
@@ -257,29 +239,16 @@ public class DaftarKatalog extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             mAuth.signOut();
-            startActivity(new Intent(DaftarKatalog.this, LoginActivity.class));
+            startActivity(new Intent(DaftarKatalogNotCheck.this, LoginActivity.class));
             finish();
         } else if (id == R.id.action_profile){
-            startActivity(new Intent(DaftarKatalog.this,ProfilUser.class));
+            startActivity(new Intent(DaftarKatalogNotCheck.this,ProfilUser.class));
             finish();
         } else if (id == R.id.action_pemesanan){
-            startActivity(new Intent(DaftarKatalog.this,Keranjang1.class));
+            startActivity(new Intent(DaftarKatalogNotCheck.this,Keranjang1.class));
 //            finish();
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public boolean checkInternet(){
-        boolean connectStatus = true;
-        ConnectivityManager ConnectionManager=(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo=ConnectionManager.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()==true ) {
-            connectStatus = true;
-        }
-        else {
-            connectStatus = false;
-        }
-        return connectStatus;
     }
 }

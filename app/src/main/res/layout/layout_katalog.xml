@@ -4,19 +4,18 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardViewPost"
+    android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp"
+    app:cardBackgroundColor="@color/white"
     android:layout_marginRight="5dp"
     android:layout_marginLeft="5dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="8dp">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="16dp">
 
     <LinearLayout
-
+        android:background="@drawable/button_layout_4"
         android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-
-        android:padding="@dimen/margin_8"
+        android:layout_height="250dp"
         android:orientation="vertical">
 
 
@@ -27,7 +26,7 @@
 
             android:layout_width="match_parent"
 
-            android:layout_height="160dp"
+            android:layout_height="120dp"
 
             android:layout_below="@id/tv_username"
 
@@ -40,17 +39,18 @@
 
 
         <TextView
-
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:id="@+id/tv_title_post"
 
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
 
             android:layout_height="wrap_content"
 
             android:layout_below="@id/img_post"
 
-            android:textSize="28dp"
-            android:textColor="@color/primary"
+            android:textSize="16dp"
+            android:textColor="@color/black"
             android:textStyle="bold"
 
             android:layout_marginTop="@dimen/margin_8"
@@ -59,34 +59,48 @@
 
 
 
-        <TextView
-
-            android:id="@+id/tv_post"
-
-            android:layout_width="wrap_content"
-
+        <LinearLayout
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:orientation="horizontal">
+        <TextView
+            android:layout_weight="4"
+            android:id="@+id/tv_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:layout_below="@id/tv_title_post"
 
             android:layout_marginBottom="@dimen/margin_8"
 
             android:layout_marginTop="@dimen/margin_8"
 
-            android:textSize="20sp"
+            android:textSize="14sp"
 
             android:text="Post" />
 
+            <ImageView
+                android:id="@+id/cart_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shopping_cart_black_24dp"/>
 
-        <TextView
-            android:id="@+id/detail"
+        </LinearLayout>
+
+        <RatingBar
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/rating"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:rating="5"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:theme="@style/RatingBar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DETAIL"
-            android:textSize="17sp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

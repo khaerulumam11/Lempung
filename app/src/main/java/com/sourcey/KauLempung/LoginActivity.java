@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                             String value = dataSnapshot.getValue(String.class);
 
                             if (value.equals("user") ){
-                                Intent move = new Intent(LoginActivity.this, DaftarKatalog.class);
+                                Intent move = new Intent(LoginActivity.this, MainActivity.class);
                                 move.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(move);
                                 finish();

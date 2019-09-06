@@ -12,7 +12,7 @@ public class ProdukViewHolder extends RecyclerView.ViewHolder {
 
     public TextView aa, bb,cc;
 
-    public ImageView dd;
+    public ImageView dd,gg;
 
     public CardView cardViewPost;
 
@@ -21,7 +21,7 @@ public class ProdukViewHolder extends RecyclerView.ViewHolder {
 
         aa = itemView.findViewById(R.id.tv_title_post);
         bb = itemView.findViewById(R.id.tv_post);
-        cc = itemView.findViewById(R.id.detail);
+        gg = itemView.findViewById(R.id.cart_button);
         dd = itemView.findViewById(R.id.img_post);
 
         cardViewPost= itemView.findViewById(R.id.cardViewPost);

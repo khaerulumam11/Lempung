@@ -13,16 +13,22 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <com.synnapps.carouselview.CarouselView
-        android:id="@+id/carouselView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:fillColor="#FFFFFFFF"
-        app:pageColor="#00000000"
-        app:radius="6dp"
-        app:slideInterval="100000"
-        app:strokeColor="#FF777777"
-        app:strokeWidth="1dp"/>
+        <android.support.v7.widget.CardView
+            app:cardCornerRadius="6dp"
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.synnapps.carouselview.CarouselView
+                android:id="@+id/carouselView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:fillColor="#FFFFFFFF"
+                app:pageColor="#00000000"
+                app:radius="6dp"
+                app:slideInterval="100000"
+                app:strokeColor="#FF777777"
+                app:strokeWidth="1dp"/>
+        </android.support.v7.widget.CardView>
 
         <LinearLayout
             android:layout_marginTop="30dp"
